@@ -1,0 +1,19 @@
+Package: diffCompVarRcpp
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2021-05-09
+Author: Andrew
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?
+Imports: 
+  Rcpp (>= 1.0.6),
+  caret (>= 6.0-86),
+  matrixStats (>= 0-56.0),
+  FSelectorRcpp (>= 0.3.3),
+  data.table (>= 1.13.6),
+  tidyr (>= 1.1.2),
+  dplyr (>= 1.0.2)
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.1.1.9001
