@@ -3,6 +3,7 @@
 #'
 #' Scores log-ration using the DCV metric (Hinton (2021))
 #'
+#' @importFrom magrittr %>%
 #' @param logRatioMatrix a n-sample by p-logratio matrix
 #' @param includeInfoGain should the infromation gain score be added
 #' @param nfolds number of parition used to compute and average scores
@@ -16,7 +17,11 @@
 #' @references
 #' Hinton, A.L., Mucha, P.J., (2021). Simultaneous variable selection and group association testing in sparse high dimensional omics data. XXXX.
 #'
-#' @return A matrix with multiplicatively imputed zeroes
+#' @return A list containing:\tabular{ll}{
+#'    \code{lrs} \tab a p-row log-ratio scoring matrix aggregated across nfolds and numRepeats  \cr
+#'    \tab \cr
+#'    \code{rawDCV} \tab The raw log-ratio scoring matrix with scores from each metric (Hinton(2021)) unaggreagted \cr
+#' }
 #' use_pipe(export = TRUE)
 #'
 #' @export

@@ -14,6 +14,8 @@ Imports:
   FSelectorRcpp (>= 0.3.3),
   data.table (>= 1.13.6),
   tidyr (>= 1.1.2),
-  dplyr (>= 1.0.2)
+  dplyr (>= 1.0.2),
+  magrittr (>= 1.5),
+  igraph (>= 1.2.5)
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.1.1.9001

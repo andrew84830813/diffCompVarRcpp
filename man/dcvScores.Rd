@@ -27,7 +27,11 @@ dcvScores(
 \item{rankOrder}{should the score be rank ordered by score along with computing the running number of distinct features (Adds non-trivial computational time).}
 }
 \value{
-A matrix with multiplicatively imputed zeroes
+A list containing:\tabular{ll}{
+   \code{lrs} \tab a p-row log-ratio scoring matrix aggregated across nfolds and numRepeats  \cr
+   \tab \cr
+   \code{rawDCV} \tab The raw log-ratio scoring matrix with scores from each metric (Hinton(2021)) unaggreagted \cr
+}
 use_pipe(export = TRUE)
 }
 \description{
