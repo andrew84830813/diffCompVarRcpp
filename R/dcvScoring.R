@@ -4,6 +4,7 @@
 #' Scores log-ration using the DCV metric (Hinton (2021))
 #'
 #' @importFrom magrittr %>%
+#' @importFrom data.table .SD
 #' @param logRatioMatrix a n-sample by p-logratio matrix
 #' @param includeInfoGain should the infromation gain score be added
 #' @param nfolds number of parition used to compute and average scores
