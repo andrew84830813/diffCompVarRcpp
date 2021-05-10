@@ -47,7 +47,7 @@ dcvScores <-
         #####################################################
         ## compute metrics
         overallMedian = column_median(as.matrix(trainData))
-        N_p = nrow(trainData) - n_distinct(classes)
+        N_p = nrow(trainData) - dplyr::n_distinct(classes)
         #Group 1 
         g1 = trainData[ytrain==classes[1],]
         g1Medians = column_median(as.matrix(g1))
