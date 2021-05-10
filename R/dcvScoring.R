@@ -122,9 +122,7 @@ dcvScores <-
     
     if(rankOrder){
       ## Aggregate
-      dcv = cvDCV %>% 
-        dplyr::group_by(Ratio) %>% 
-        dplyr::summarise_all(.funs = mean) 
+      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
       
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
@@ -140,7 +138,7 @@ dcvScores <-
       }
       dcv$nDistinct = nDistinct
       
-      return(list(lrs = dcv[,c("Ratio","rowmean","nDistinct")],rawDCV = dcv))
+      return(list(lrs = subset(dcv,select = c("Ratio","rowmean","nDistinct")),rawDCV = dcv))
     }else{
       dcv = cvDCV %>% 
         dplyr::group_by(Ratio) %>% 
