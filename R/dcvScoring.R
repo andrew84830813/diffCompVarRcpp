@@ -123,8 +123,8 @@ dcvScores <-
     if(rankOrder){
       ## Aggregate
       dcv = cvDCV %>% 
-        group_by(Ratio) %>% 
-        summarise_all(.funs = mean) 
+        dplyr::group_by(Ratio) %>% 
+        dplyr::summarise_all(.funs = mean) 
       
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
@@ -136,7 +136,7 @@ dcvScores <-
       for(i in 1:nrow(el)){
         num = unique(el$num[1:i])
         den = unique(el$denom[1:i])
-        nDistinct[i] = n_distinct(c(num,den))
+        nDistinct[i] = dplyr::n_distinct(c(num,den))
       }
       dcv$nDistinct = nDistinct
       
