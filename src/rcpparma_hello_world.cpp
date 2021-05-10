@@ -46,6 +46,7 @@ double KS(arma::colvec x, arma::colvec y) {
 //' @param mt n-sample by p-feature matrix for class1
 //' @param mt2 n-sample by p-feature matrix for class2
 //' @return p-vector of K-S statistics
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector K_S(arma::mat mt,arma::mat mt2) {
     int n = mt.n_cols;
@@ -62,6 +63,7 @@ Rcpp::NumericVector K_S(arma::mat mt,arma::mat mt2) {
 //'
 //' @param x n-sample by p-feature matrix
 //' @return p-vector of columnwise medians
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector column_median(arma::mat x) {
     int  ncol =  x.n_cols;
@@ -77,6 +79,7 @@ Rcpp::NumericVector column_median(arma::mat x) {
 //' @param x n-sample by p-feature matrix
 //' @param m p-vector of column medians to compute variance from
 //' @return p-vecor of columnwise variance based on supplied median value
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector column_medianVar(arma::mat x, arma::mat m) {
     int  ncol =  x.n_cols, nrow = x.n_rows;

@@ -6,6 +6,7 @@
 #' @param mt n-sample by p-feature matrix for class1
 #' @param mt2 n-sample by p-feature matrix for class2
 #' @return p-vector of K-S statistics
+#' @export
 K_S <- function(mt, mt2) {
     .Call('_diffCompVarRcpp_K_S', PACKAGE = 'diffCompVarRcpp', mt, mt2)
 }
@@ -14,6 +15,7 @@ K_S <- function(mt, mt2) {
 #'
 #' @param x n-sample by p-feature matrix
 #' @return p-vector of columnwise medians
+#' @export
 column_median <- function(x) {
     .Call('_diffCompVarRcpp_column_median', PACKAGE = 'diffCompVarRcpp', x)
 }
@@ -23,6 +25,7 @@ column_median <- function(x) {
 #' @param x n-sample by p-feature matrix
 #' @param m p-vector of column medians to compute variance from
 #' @return p-vecor of columnwise variance based on supplied median value
+#' @export
 column_medianVar <- function(x, m) {
     .Call('_diffCompVarRcpp_column_medianVar', PACKAGE = 'diffCompVarRcpp', x, m)
 }

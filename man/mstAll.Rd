@@ -13,10 +13,9 @@ mstAll(featMatrix, dcvRanking)
 }
 \value{
 A data.frame with the MST selected log-ratio features
-use_pipe(export = TRUE)
 }
 \description{
-Uses scoring from dcvScores() to construct and prune a log-ratio graph witht the maxi= spanning tree method
+Uses scoring from dcvScores() to construct and prune a log-ratio graph witht the maximum spanning tree method
 }
 \examples{
 mstAll()
