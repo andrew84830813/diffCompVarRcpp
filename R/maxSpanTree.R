@@ -21,7 +21,7 @@ mstAll <-
   function(featMatrix,dcvRanking){
     dcvRanking = dcvRanking %>% 
       filter(Ratio %in% colnames(featMatrix))
-    keyRats = separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
+    keyRats = tidyr::separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
     el_= data.frame(keyRats$Num,keyRats$Denom,keyRats$Ratio)
     g = igraph::graph_from_edgelist(as.matrix(el_[,1:2]),directed = T)
     E(g)$weight = dcvRanking$rowmean
