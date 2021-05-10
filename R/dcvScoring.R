@@ -11,6 +11,8 @@
 #' @param seed_ random seed control
 #' @param rankOrder should the score be rank ordered by score along with computing the running number of distinct features (Adds non-trivial computational time).  
 #'
+#' @useDynLib diffCompVarRcpp
+#'
 #' @examples
 #' finalDCV()
 #'
