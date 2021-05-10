@@ -19,13 +19,12 @@
 #' @export
 mstAll <-
   function(featMatrix,dcvRanking){
-    dcvRanking = dcvRanking %>% 
-      filter(Ratio %in% colnames(featMatrix))
+    dcvRanking = dcvRanking[Ratio %in% colnames(featMatrix)]
     keyRats = tidyr::separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
     el_= data.frame(keyRats$Num,keyRats$Denom,keyRats$Ratio)
     g = igraph::graph_from_edgelist(as.matrix(el_[,1:2]),directed = T)
     igraph::E(g)$weight = dcvRanking$rowmean
-    g <-  igraph::minimum.spanning.tree(g,weights = -E(g)$weight)
+    g <-  igraph::minimum.spanning.tree(g,weights = -igraph::E(g)$weight)
     Ratios = data.frame(igraph::get.edgelist(g,names = T))
     Ratios_na = data.frame(paste(Ratios[,1],Ratios[,2],sep = "___"))
     el_ = cbind(Ratios,Ratios_na)
