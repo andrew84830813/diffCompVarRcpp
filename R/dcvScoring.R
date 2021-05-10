@@ -122,7 +122,7 @@ dcvScores <-
     
     if(rankOrder){
       ## Aggregate
-      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
+      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(data.table::.SD, mean)]
       
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
