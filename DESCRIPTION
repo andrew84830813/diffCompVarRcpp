@@ -1,15 +1,16 @@
 Package: diffCompVarRcpp
 Type: Package
-Title: What the package does (short line)
+Title: Computes Differential Compositional Variation (DCV) scoring of all pairwise log ratios
 Version: 1.0
 Date: 2021-05-09
-Author: Andrew Hinton
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Andrew Hinton <andrew84@unc.email.edu>
+Maintainer: Andrew Hinton <andrew84@unc.email.edu>
+Description: Computes Differential Compositional Variation (DCV) scoring for compositional data. An all pairwise log ratio approach to variable selection in compositional data.
+License: MIT + file LICENSE
 Imports: 
   Rcpp (>= 1.0.6),
   caret (>= 6.0-86),
+  compositions (>= 2.0-0),
   matrixStats (>= 0-56.0),
   FSelectorRcpp (>= 0.3.3),
   data.table (>= 1.13.6),
@@ -18,4 +19,5 @@ Imports:
   magrittr (>= 1.5),
   igraph (>= 1.2.5)
 LinkingTo: Rcpp, RcppArmadillo
+Encoding: UTF-8
 RoxygenNote: 7.1.1.9001

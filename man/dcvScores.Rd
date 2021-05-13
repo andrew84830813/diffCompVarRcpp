@@ -37,10 +37,6 @@ use_pipe(export = TRUE)
 \description{
 Scores log-ration using the DCV metric (Hinton (2021))
 }
-\examples{
-finalDCV()
-
-}
 \references{
 Hinton, A.L., Mucha, P.J., (2021). Simultaneous variable selection and group association testing in sparse high dimensional omics data. XXXX.
 }

@@ -17,10 +17,6 @@ A data.frame with the MST selected log-ratio features
 \description{
 Uses scoring from dcvScores() to construct and prune a log-ratio graph witht the maximum spanning tree method
 }
-\examples{
-mstAll()
-
-}
 \references{
 Hinton, A.L., Mucha, P.J., (2021). Simultaneous variable selection and group association testing in sparse high dimensional omics data. XXXX.
 }

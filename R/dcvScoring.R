@@ -14,8 +14,6 @@
 #'
 #' @useDynLib diffCompVarRcpp
 #'
-#' @examples
-#' finalDCV()
 #'
 #' @references
 #' Hinton, A.L., Mucha, P.J., (2021). Simultaneous variable selection and group association testing in sparse high dimensional omics data. XXXX.
@@ -31,6 +29,7 @@
 dcvScores <-
   function(logRatioMatrix,includeInfoGain = T,nfolds = 5,numRepeats = 1,seed_ = 08272008,rankOrder = T){
     
+    Ratio = NULL
     cvDCV = data.frame()
     for(r in 1:numRepeats){
       

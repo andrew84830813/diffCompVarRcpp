@@ -16,7 +16,7 @@ double KS(arma::colvec x, arma::colvec y) {
     double minx = cc.min();
     double maxx = cc.max();
     arma::colvec r = arma::linspace(minx, maxx, n);
-    int N = r.n_rows;
+    //int N = r.n_rows;
     
     arma::colvec fx = arma::linspace(minx, maxx, n);
     arma::colvec v = arma::sort(x);
@@ -43,6 +43,7 @@ double KS(arma::colvec x, arma::colvec y) {
 
 //' Computes columnwise K-S statistic
 //'
+//' @importFrom Rcpp evalCpp
 //' @param mt n-sample by p-feature matrix for class1
 //' @param mt2 n-sample by p-feature matrix for class2
 //' @return p-vector of K-S statistics
@@ -61,6 +62,7 @@ Rcpp::NumericVector K_S(arma::mat mt,arma::mat mt2) {
 
 //' Computes column median using rcpp
 //'
+//' @importFrom Rcpp evalCpp
 //' @param x n-sample by p-feature matrix
 //' @return p-vector of columnwise medians
 //' @export
@@ -76,6 +78,7 @@ Rcpp::NumericVector column_median(arma::mat x) {
 
 //' Computes column variance based on median
 //'
+//' @importFrom Rcpp evalCpp
 //' @param x n-sample by p-feature matrix
 //' @param m p-vector of column medians to compute variance from
 //' @return p-vecor of columnwise variance based on supplied median value
@@ -95,6 +98,3 @@ Rcpp::NumericVector column_medianVar(arma::mat x, arma::mat m) {
     }
     return out;
 }
-
-
-

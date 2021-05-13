@@ -7,10 +7,7 @@
 #' @param featMatrix a n-sample by p-logratio matrix
 #' @param dcvRanking  a p-row log-ratio scoring matrix usually from dcvScore()$lrs
 #'
-#' @examples
-#' mstAll()
 #'
-
 #' @references
 #' Hinton, A.L., Mucha, P.J., (2021). Simultaneous variable selection and group association testing in sparse high dimensional omics data. XXXX.
 #'
@@ -19,6 +16,7 @@
 #' @export
 mstAll <-
   function(featMatrix,dcvRanking){
+    Ratio=NULL
     dcvRanking = dcvRanking[Ratio %in% colnames(featMatrix)]
     keyRats = tidyr::separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
     el_= data.frame(keyRats$Num,keyRats$Denom,keyRats$Ratio)
