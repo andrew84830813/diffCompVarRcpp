@@ -17,7 +17,9 @@
 mstAll <-
   function(featMatrix,dcvRanking){
     Ratio=NULL
-    dcvRanking = dcvRanking[Ratio %in% colnames(featMatrix)]
+    
+    dcvRanking = dcvRanking[dcvRanking$Ratio %in% colnames(featMatrix),]
+    
     keyRats = tidyr::separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
     el_= data.frame(keyRats$Num,keyRats$Denom,keyRats$Ratio)
     g = igraph::graph_from_edgelist(as.matrix(el_[,1:2]),directed = T)
