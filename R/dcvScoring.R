@@ -5,6 +5,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom data.table .SD
+#' @importFrom foreach %dopar%
 #' @param logRatioMatrix a n-sample by p-logratio matrix
 #' @param includeInfoGain should the infromation gain score be added
 #' @param nfolds number of parition used to compute and average scores
@@ -30,13 +31,15 @@ dcvScores <-
   function(logRatioMatrix,includeInfoGain = T,nfolds = 5,numRepeats = 1,seed_ = 08272008,rankOrder = T){
     
     Ratio = NULL
+    f = NULL
     cvDCV = data.frame()
     for(r in 1:numRepeats){
       
       set.seed(r)
       foldData = caret::createFolds(y = logRatioMatrix[,1],k = nfolds)
       
-      for(f in 1:nfolds){
+      message("Compute DCV Scores")
+      cv_DCV = foreach::foreach(f = 1:nfolds,.combine = rbind)%dopar%{
         
         rows = foldData[[f]]
         ####################################################
@@ -46,11 +49,11 @@ dcvScores <-
         classes = as.character(unique(ytrain))
         #####################################################
         ## compute metrics
-        overallMedian = column_median(as.matrix(trainData))
+        overallMedian = diffCompVarRcpp::column_median(as.matrix(trainData))
         N_p = nrow(trainData) - dplyr::n_distinct(classes)
         #Group 1 
         g1 = trainData[ytrain==classes[1],]
-        g1Medians = column_median(as.matrix(g1))
+        g1Medians = diffCompVarRcpp::column_median(as.matrix(g1))
         g1Means = colMeans(g1)
         g1Var = matrixStats::colVars(as.matrix(g1))
         names(g1Var) = names(g1Means)
@@ -58,7 +61,7 @@ dcvScores <-
         #Group 2
         g2 = trainData[ytrain==classes[2],]
         n2 = nrow(g2)
-        g2Medians = column_median(as.matrix(g2))
+        g2Medians = diffCompVarRcpp::column_median(as.matrix(g2))
         g2Means = colMeans(g2)
         g2Var = matrixStats::colVars(as.matrix(g2))
         names(g2Var) = names(g2Means)
@@ -66,7 +69,7 @@ dcvScores <-
         
         ## Brown Forsyth
         num = n1*(g1Medians- overallMedian)^2 + n2*(g2Medians- overallMedian)^2
-        denom = column_medianVar(as.matrix(g1),g1Medians) + column_medianVar(as.matrix(g2),g2Medians)
+        denom = diffCompVarRcpp::column_medianVar(as.matrix(g1),g1Medians) + diffCompVarRcpp::column_medianVar(as.matrix(g2),g2Medians)
         medianF = N_p*(num / denom)
         medianF = scale(as.vector(medianF))
         
@@ -87,7 +90,7 @@ dcvScores <-
         levs = unique(ytrain)
         mat1 = yy[ytrain==levs[1],]
         mat2 = yy[ytrain==levs[2],]
-        KS.df = data.frame(KS = K_S(mt = mat1,mt2 = mat2))
+        KS.df = data.frame(KS = diffCompVarRcpp::K_S(mt = mat1,mt2 = mat2))
         KS.df = scale(KS.df)
         
         #Combine
@@ -111,39 +114,42 @@ dcvScores <-
         dfc = cbind.data.frame(dfc,f)
         dfc = cbind(dfc,colnames(trainData))
         colnames(dfc) = c("welch_T","classical_F","KS","brownForsythe_F","IG","rowmean","fold","Ratio")
-        #colnames(dfc) = c("welch_T","classical_F","KS","IG","rowmean","fold","Ratio")
+        message(f)
+        dfc
         
-        cvDCV = rbind(cvDCV,dfc)
-        message("Fold ", f, " of ", nfolds)
       }
-      
+      cvDCV = rbind(cvDCV,cv_DCV)
     }  
     
     
     if(rankOrder){
       ## Aggregate
       dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
-      
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
-      
+      message("Compute number of distinct parts")
       #node strength
       el = data.frame(Ratio = dcv$Ratio,Score = dcv$rowmean)
       el = tidyr::separate(data = el,col = 1,into = c("num","denom"),sep = "___",remove = F)
-      nDistinct = c()
+      mxd = dplyr::n_distinct(c(el$num,el$denom))
+      nDistinct = rep(mxd,nrow(el))
       for(i in 1:nrow(el)){
         num = unique(el$num[1:i])
         den = unique(el$denom[1:i])
         nDistinct[i] = dplyr::n_distinct(c(num,den))
+        if(nDistinct[i]==mxd){
+          break
+        }
       }
       dcv$nDistinct = nDistinct
       
       return(list(lrs = subset(dcv,select = c("Ratio","rowmean","nDistinct")),rawDCV = dcv))
+      
     }else{
-      dcv = cvDCV %>% 
-        dplyr::group_by(Ratio) %>% 
-        dplyr::summarise_all(.funs = mean)
-      return(list(lrs = dcv[,c("Ratio","rowmean")],rawDCV = dcv))
+      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
+      dcv = data.table::setDT(dcv)[order(-rowmean)]
+      
+      return(list(lrs = dcv[,c("Ratio","rowmean")],rawDCV = dcv,cv_DCV = cvDCV))
     }
     
     
