@@ -18,7 +18,8 @@ Imports:
     dplyr (>= 1.0.2),
     magrittr (>= 1.5),
     igraph (>= 1.2.5),
-    foreach (>= 1.5.1)
+    foreach (>= 1.5.1),
+    combinat (>= 0.0-8)
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 RoxygenNote: 7.1.1.9001

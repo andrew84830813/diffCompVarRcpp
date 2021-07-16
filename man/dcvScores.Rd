@@ -7,7 +7,7 @@
 dcvScores(
   logRatioMatrix,
   includeInfoGain = T,
-  nfolds = 5,
+  nfolds = 1,
   numRepeats = 1,
   seed_ = 8272008,
   rankOrder = T

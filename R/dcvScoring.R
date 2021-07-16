@@ -28,103 +28,114 @@
 #'
 #' @export
 dcvScores <-
-  function(logRatioMatrix,includeInfoGain = T,nfolds = 5,numRepeats = 1,seed_ = 08272008,rankOrder = T){
+  function(logRatioMatrix,includeInfoGain = T,nfolds = 1,numRepeats = 1,seed_ = 08272008,rankOrder = T){
     
     Ratio = NULL
     f = NULL
+    label = data.frame(logRatioMatrix)[,1]
     cvDCV = data.frame()
-    for(r in 1:numRepeats){
+    c = combinat::combn2(as.character(unique(label)))
+    for(jz in 1:nrow(c)){
       
-      set.seed(r)
-      foldData = caret::createFolds(y = logRatioMatrix[,1],k = nfolds)
+      cc = c[jz,]
+      ph = logRatioMatrix[label%in%cc,]
+      pwComparison = paste0(c[jz,1],"_",c[jz,2])
       
-      message("Compute DCV Scores")
-      cv_DCV = foreach::foreach(f = 1:nfolds,.combine = rbind)%dopar%{
+      for(r in 1:numRepeats){
         
-        rows = foldData[[f]]
-        ####################################################
-        ##  select fold data for train and test splilt
-        trainData = logRatioMatrix[rows,-1]
-        ytrain = factor(logRatioMatrix[rows,1])
-        classes = as.character(unique(ytrain))
-        #####################################################
-        ## compute metrics
-        overallMedian = diffCompVarRcpp::column_median(as.matrix(trainData))
-        N_p = nrow(trainData) - dplyr::n_distinct(classes)
-        #Group 1 
-        g1 = trainData[ytrain==classes[1],]
-        g1Medians = diffCompVarRcpp::column_median(as.matrix(g1))
-        g1Means = colMeans(g1)
-        g1Var = matrixStats::colVars(as.matrix(g1))
-        names(g1Var) = names(g1Means)
-        n1 = nrow(g1)
-        #Group 2
-        g2 = trainData[ytrain==classes[2],]
-        n2 = nrow(g2)
-        g2Medians = diffCompVarRcpp::column_median(as.matrix(g2))
-        g2Means = colMeans(g2)
-        g2Var = matrixStats::colVars(as.matrix(g2))
-        names(g2Var) = names(g2Means)
-        n2 = nrow(g2)
-        
-        ## Brown Forsyth
-        num = n1*(g1Medians- overallMedian)^2 + n2*(g2Medians- overallMedian)^2
-        denom = diffCompVarRcpp::column_medianVar(as.matrix(g1),g1Medians) + diffCompVarRcpp::column_medianVar(as.matrix(g2),g2Medians)
-        medianF = N_p*(num / denom)
-        medianF = scale(as.vector(medianF))
-        
-        ## Welchs Tstat
-        tstat = abs( (g1Means-g2Means) / sqrt( (g1Var/n1) + (g2Var/n2) ) )
-        tstat = scale(tstat)
-        
-        ## F-ratio
-        sm = colMeans(trainData)
-        expVar =n1*(g1Means - sm)^2 + n2*(g2Means - sm)^2
-        unexpVar = g2Var + g1Var
-        fRatio = expVar / unexpVar
-        fRatio = scale(fRatio)
-        
-        ## KS Statistic
-        y = data.frame(rbind(g1,g2))
-        yy = as.matrix(y)
-        levs = unique(ytrain)
-        mat1 = yy[ytrain==levs[1],]
-        mat2 = yy[ytrain==levs[2],]
-        KS.df = data.frame(KS = diffCompVarRcpp::K_S(mt = mat1,mt2 = mat2))
-        KS.df = scale(KS.df)
-        
-        #Combine
-        dfc = cbind(tstat,fRatio,KS.df,medianF)
-        #dfc = cbind(tstat,fRatio,KS.df)
-        
-        
-        #Information Gain
-        if(includeInfoGain){
-          ig = FSelectorRcpp::information_gain(x = trainData,y = ytrain,type = "gainratio" ,discIntegers = T)$importance
-          ig[is.na(ig)]=0
-          ig = scale(ig)
-          dfc = cbind(dfc,ig)
+        set.seed(r)
+        foldData = caret::createFolds(y = ph[,1],k = nfolds)
+        message("Compute DCV Scores ",pwComparison,"-(",jz," of ",nrow(c),")")
+        cv_DCV = foreach::foreach(f = 1:nfolds,.combine = rbind)%dopar%{
+          
+          rows = foldData[[f]]
+          ####################################################
+          ##  select fold data for train and test splilt
+          trainData = ph[rows,-1]
+          ytrain = factor(ph[rows,1])
+          classes = as.character(unique(ytrain))
+          #####################################################
+          ## compute metrics
+          overallMedian = diffCompVarRcpp::column_median(as.matrix(trainData))
+          N_p = nrow(trainData) - dplyr::n_distinct(classes)
+          #Group 1 
+          g1 = trainData[ytrain==classes[1],]
+          g1Medians = diffCompVarRcpp::column_median(as.matrix(g1))
+          g1Means = colMeans(g1)
+          g1Var = matrixStats::colVars(as.matrix(g1))
+          names(g1Var) = names(g1Means)
+          n1 = nrow(g1)
+          #Group 2
+          g2 = trainData[ytrain==classes[2],]
+          n2 = nrow(g2)
+          g2Medians = diffCompVarRcpp::column_median(as.matrix(g2))
+          g2Means = colMeans(g2)
+          g2Var = matrixStats::colVars(as.matrix(g2))
+          names(g2Var) = names(g2Means)
+          n2 = nrow(g2)
+          
+          ## Brown Forsyth
+          num = n1*(g1Medians- overallMedian)^2 + n2*(g2Medians- overallMedian)^2
+          denom = diffCompVarRcpp::column_medianVar(as.matrix(g1),g1Medians) + diffCompVarRcpp::column_medianVar(as.matrix(g2),g2Medians)
+          medianF = N_p*(num / denom)
+          medianF = scale(as.vector(medianF))
+          
+          ## Welchs Tstat
+          tstat = abs( (g1Means-g2Means) / sqrt( (g1Var/n1) + (g2Var/n2) ) )
+          tstat = scale(tstat)
+          
+          ## F-ratio
+          sm = colMeans(trainData)
+          expVar =n1*(g1Means - sm)^2 + n2*(g2Means - sm)^2
+          unexpVar = g2Var + g1Var
+          fRatio = expVar / unexpVar
+          fRatio = scale(fRatio)
+          
+          ## KS Statistic
+          y = data.frame(rbind(g1,g2))
+          yy = as.matrix(y)
+          levs = unique(ytrain)
+          mat1 = yy[ytrain==levs[1],]
+          mat2 = yy[ytrain==levs[2],]
+          KS.df = data.frame(KS = diffCompVarRcpp::K_S(mt = mat1,mt2 = mat2))
+          KS.df = scale(KS.df)
+          
+          #Combine
+          dfc = cbind(tstat,fRatio,KS.df,medianF)
+          #dfc = cbind(tstat,fRatio,KS.df)
+          
+          
+          #Information Gain
+          if(includeInfoGain){
+            ig = FSelectorRcpp::information_gain(x = trainData,y = ytrain,type = "gainratio" ,discIntegers = T)$importance
+            ig[is.na(ig)]=0
+            ig = scale(ig)
+            dfc = cbind(dfc,ig)
+          }
+          
+          #Scale
+          dfc[is.na(dfc)]=0
+          dfc[is.infinite(dfc)]=0
+          rowmean = rowSums(dfc,na.rm = T)
+          dfc = cbind(dfc,rowmean)
+          dfc = cbind.data.frame(dfc,f)
+          dfc = cbind(dfc,colnames(trainData))
+          colnames(dfc) = c("welch_T","classical_F","KS","brownForsythe_F","IG","rowmean","fold","Ratio")
+          message("Fold ",f, " of ",nfolds)
+          dfc$comp = pwComparison
+          dfc
+          
         }
+        cvDCV = rbind(cvDCV,cv_DCV)
         
-        #Scale
-        dfc[is.na(dfc)]=0
-        dfc[is.infinite(dfc)]=0
-        rowmean = rowSums(dfc,na.rm = T)
-        dfc = cbind(dfc,rowmean)
-        dfc = cbind.data.frame(dfc,f)
-        dfc = cbind(dfc,colnames(trainData))
-        colnames(dfc) = c("welch_T","classical_F","KS","brownForsythe_F","IG","rowmean","fold","Ratio")
-        message(f)
-        dfc
-        
-      }
-      cvDCV = rbind(cvDCV,cv_DCV)
-    }  
+      }  
+    }
+    
     
     
     if(rankOrder){
       ## Aggregate
-      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
+      dcv = data.table::setDT(cvDCV[,-9])[,by = Ratio,lapply(.SD, mean)]
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
       message("Compute number of distinct parts")
@@ -146,7 +157,7 @@ dcvScores <-
       return(list(lrs = subset(dcv,select = c("Ratio","rowmean","nDistinct")),rawDCV = dcv))
       
     }else{
-      dcv = data.table::setDT(cvDCV)[,by = Ratio,lapply(.SD, mean)]
+      dcv = data.table::setDT(cvDCV[,-9])[,by = Ratio,lapply(.SD, mean)]
       dcv = data.table::setDT(dcv)[order(-rowmean)]
       
       return(list(lrs = dcv[,c("Ratio","rowmean")],rawDCV = dcv,cv_DCV = cvDCV))
