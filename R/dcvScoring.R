@@ -68,6 +68,7 @@ dcvScores <-
           g1Means = diffCompVarRcpp::column_mean(as.matrix(g1)) # g1Means = colMeans(g1)
           g1Var = diffCompVarRcpp::column_medianVar(as.matrix(g1),g1Means)  # g1Var = matrixStats::colVars(as.matrix(g1))
           names(g1Var) = colnames(g1)
+          g1Means = as.vector(g1Means)
           names(g1Means) = colnames(g1)
           n1 = nrow(g1)
           
@@ -78,6 +79,7 @@ dcvScores <-
           g2Means = diffCompVarRcpp::column_mean(as.matrix(g2))  #g2Means = colMeans(g2)
           g2Var = diffCompVarRcpp::column_medianVar(as.matrix(g2),g2Means)  #g2Var = matrixStats::colVars(as.matrix(g2))
           names(g2Var) = colnames(g2)
+          g2Means = as.vector(g2Means)
           names(g2Means) = colnames(g2)
           n2 = nrow(g2)
           
