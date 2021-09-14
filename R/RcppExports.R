@@ -22,7 +22,17 @@ column_median <- function(x) {
     .Call('_diffCompVarRcpp_column_median', PACKAGE = 'diffCompVarRcpp', x)
 }
 
-#' Computes column variance based on median
+#' Computes column mean using rcpp
+#'
+#' @importFrom Rcpp evalCpp
+#' @param x n-sample by p-feature matrix
+#' @return p-vector of columnwise mean
+#' @export
+column_mean <- function(x) {
+    .Call('_diffCompVarRcpp_column_mean', PACKAGE = 'diffCompVarRcpp', x)
+}
+
+#' Computes column variance based on supplied median/mean vectors
 #'
 #' @importFrom Rcpp evalCpp
 #' @param x n-sample by p-feature matrix

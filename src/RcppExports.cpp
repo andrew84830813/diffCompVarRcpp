@@ -29,6 +29,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// column_mean
+Rcpp::NumericVector column_mean(arma::mat x);
+RcppExport SEXP _diffCompVarRcpp_column_mean(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(column_mean(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // column_medianVar
 Rcpp::NumericVector column_medianVar(arma::mat x, arma::mat m);
 RcppExport SEXP _diffCompVarRcpp_column_medianVar(SEXP xSEXP, SEXP mSEXP) {
@@ -45,6 +56,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_diffCompVarRcpp_K_S", (DL_FUNC) &_diffCompVarRcpp_K_S, 2},
     {"_diffCompVarRcpp_column_median", (DL_FUNC) &_diffCompVarRcpp_column_median, 1},
+    {"_diffCompVarRcpp_column_mean", (DL_FUNC) &_diffCompVarRcpp_column_mean, 1},
     {"_diffCompVarRcpp_column_medianVar", (DL_FUNC) &_diffCompVarRcpp_column_medianVar, 2},
     {NULL, NULL, 0}
 };

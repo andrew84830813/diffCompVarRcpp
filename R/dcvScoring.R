@@ -55,22 +55,27 @@ dcvScores <-
           ytrain = factor(ph[rows,1])
           classes = as.character(unique(ytrain))
           #####################################################
-          ## compute metrics
+          
+          #### --------------------*
+          ##  compute metrics 
+          #### --------------------*
           overallMedian = diffCompVarRcpp::column_median(as.matrix(trainData))
           N_p = nrow(trainData) - dplyr::n_distinct(classes)
-          #Group 1 
+          
+          ## Group 1 
           g1 = trainData[ytrain==classes[1],]
           g1Medians = diffCompVarRcpp::column_median(as.matrix(g1))
-          g1Means = colMeans(g1)
-          g1Var = matrixStats::colVars(as.matrix(g1))
+          g1Means = diffCompVarRcpp::column_mean(g1) # g1Means = colMeans(g1)
+          g1Var = diffCompVarRcpp::column_medianVar(as.matrix(g1),g1Means)  # g1Var = matrixStats::colVars(as.matrix(g1))
           names(g1Var) = names(g1Means)
           n1 = nrow(g1)
-          #Group 2
+          
+          ## Group 2
           g2 = trainData[ytrain==classes[2],]
           n2 = nrow(g2)
           g2Medians = diffCompVarRcpp::column_median(as.matrix(g2))
-          g2Means = colMeans(g2)
-          g2Var = matrixStats::colVars(as.matrix(g2))
+          g2Means = diffCompVarRcpp::column_mean(g2)  #g2Means = colMeans(g2)
+          g2Var = diffCompVarRcpp::column_medianVar(as.matrix(g2),g2Means)  #g2Var = matrixStats::colVars(as.matrix(g2))
           names(g2Var) = names(g2Means)
           n2 = nrow(g2)
           

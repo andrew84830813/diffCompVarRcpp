@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{column_medianVar}
 \alias{column_medianVar}
-\title{Computes column variance based on median}
+\title{Computes column variance based on supplied median/mean vectors}
 \usage{
 column_medianVar(x, m)
 }
@@ -15,5 +15,5 @@ column_medianVar(x, m)
 p-vecor of columnwise variance based on supplied median value
 }
 \description{
-Computes column variance based on median
+Computes column variance based on supplied median/mean vectors
 }

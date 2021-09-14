@@ -76,7 +76,27 @@ Rcpp::NumericVector column_median(arma::mat x) {
     return out;
 }
 
-//' Computes column variance based on median
+
+//' Computes column mean using rcpp
+//'
+//' @importFrom Rcpp evalCpp
+//' @param x n-sample by p-feature matrix
+//' @return p-vector of columnwise mean
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericVector column_mean(arma::mat x) {
+    int  ncol =  x.n_cols;
+    Rcpp::NumericVector out(ncol);
+    
+    arma::mat B   = arma::mean(x);
+    out = B  ;
+    return out;
+}
+
+
+
+
+//' Computes column variance based on supplied median/mean vectors
 //'
 //' @importFrom Rcpp evalCpp
 //' @param x n-sample by p-feature matrix
