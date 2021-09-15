@@ -18,7 +18,7 @@ mstAll <-
   function(featMatrix,dcvRanking){
     Ratio=NULL
     
-    dcvRanking = dcvRanking[dcvRanking$Ratio %in% colnames(featMatrix),]
+    dcvRanking = dcvRanking[as.character(dcvRanking$Ratio) %in% colnames(featMatrix),]
     
     keyRats = tidyr::separate(dcvRanking,1,into = c("Num","Denom"),sep = "___",remove = F)
     el_= data.frame(keyRats$Num,keyRats$Denom,keyRats$Ratio)
@@ -30,5 +30,5 @@ mstAll <-
     el_ = cbind(Ratios,Ratios_na)
     colnames(el_)[1:3] = c("Num","Denom","Ratio")
     
-    return(ratios = subset(featMatrix,select = el_$Ratio))
+    return(ratios = subset(featMatrix,select = as.character(el_$Ratio)))
   }
