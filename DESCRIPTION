@@ -23,3 +23,5 @@ Imports:
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 RoxygenNote: 7.1.1.9001
+Depends: 
+    R (>= 3.6.1)
