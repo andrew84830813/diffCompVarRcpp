@@ -1,4 +1,11 @@
 # diffCompVarRcpp
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/andrew84830813/diffCompVarRcpp/workflows/R-CMD-check/badge.svg)](https://github.com/andrew84830813/diffCompVarRcpp/actions)
+<!-- badges: end -->
+
+
+
 Package to perform differential compositional variation scoring
 
 
